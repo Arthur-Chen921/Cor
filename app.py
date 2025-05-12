@@ -113,6 +113,7 @@ elif page == "仲裁工作流":
     
     tab1, tab2, tab3, tab4 = st.tabs(["冲突识别", "仲裁会议", "系统连携", "执行跟踪"])
     
+    # 冲突识别标签页
     with tab1:
         st.subheader("阶段1：多AI输出分析")
         
@@ -142,7 +143,6 @@ elif page == "仲裁工作流":
         st.markdown("---")
         st.subheader("AI输出溯源验证")
         
-        # 新增溯源验证看板
         verify_df = pd.DataFrame([
             ["采购AI", "交付准时率", "98%", "ERP订单数据", "已验证"],
             ["法务AI", "关联诉讼", "1条", "裁判文书网", "已核实"],
@@ -153,6 +153,7 @@ elif page == "仲裁工作流":
             lambda x: "color: green" if x=="已验证" else "color: orange" if x=="已核实" else "color: red"), 
             use_container_width=True)
     
+    # 仲裁会议标签页
     with tab2:
         st.subheader("仲裁会议进程")
         
@@ -187,10 +188,10 @@ elif page == "仲裁工作流":
             st.metric("法务AI置信度", "78%", delta_color="inverse")
             st.metric("财务AI置信度", "85%", delta="高可信区间")
     
+    # 系统连携标签页
     with tab3:
         st.subheader("系统连携拓扑")
         
-        # 拓扑图数据
         nodes = pd.DataFrame([
             {"节点": "链智审核心", "类型": "中枢系统", "x": 2, "y": 2},
             {"节点": "ERP", "类型": "业务系统", "x": 1, "y": 1},
@@ -212,7 +213,6 @@ elif page == "仲裁工作流":
                         text="节点",
                         title="系统集成拓扑图")
         
-        # 添加连接线
         for edge in edges:
             source = nodes[nodes["节点"] == edge["来源"]].iloc[0]
             target = nodes[nodes["节点"] == edge["目标"]].iloc[0]
@@ -227,7 +227,6 @@ elif page == "仲裁工作流":
                          textfont=dict(size=14))
         st.plotly_chart(fig, use_container_width=True)
         
-        # 数据流监控
         st.markdown("**实时数据流状态**")
         flow_df = pd.DataFrame([
             ["ERP→核心", "采购订单", "正常", "5ms"],
@@ -239,6 +238,7 @@ elif page == "仲裁工作流":
             lambda x: "color: red" if x=="延迟" else None), 
             use_container_width=True)
     
+    # 执行跟踪标签页
     with tab4:
         st.subheader("执行追踪矩阵")
         task_df = pd.DataFrame([
@@ -253,13 +253,11 @@ elif page == "仲裁工作流":
         
         st.button("模拟完成通知", help="点击发送完成通知邮件")
 
-# 案例库页
+# 实施案例库页
 elif page == "实施案例库":
     st.header("📚 实施案例库")
     
-    case_filter = st.selectbox("筛选案例类型", [
-        "全部", "三重冲突", "双重冲突", "单一冲突"
-    ])
+    case_filter = st.selectbox("筛选案例类型", ["全部", "三重冲突", "双重冲突", "单一冲突"])
     
     case_df = pd.DataFrame({
         "案例ID": ["C-2023-045", "C-2024-012", "C-2024-018"],
@@ -277,7 +275,7 @@ elif page == "实施案例库":
     with st.expander("案例趋势分析"):
         fig = px.line(case_df, x="案例ID", y="处理时长",
                      title="案例处理效率趋势")
-        st.plotly_chart(fig)
+        st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("---")
 st.caption("演示系统说明：本系统使用模拟数据展示核心业务流程")
